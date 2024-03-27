@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom'; // Import useHistory hook
+import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { CREATE_CUSTOMER } from './mutations';
 
@@ -8,7 +8,7 @@ const CreateCustomerForm = () => {
   const [email, setEmail] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const history = useHistory(); // Initialize useHistory hook
+  const history = useHistory();
 
   const [createCustomer] = useMutation(CREATE_CUSTOMER);
 
@@ -21,7 +21,7 @@ const CreateCustomerForm = () => {
         setSuccessMessage('Customer created successfully.');
         setErrorMessage('');
         // Redirect to customer list
-        history.push('/customer-list');
+        history.push('/Customer-List');
       })
       .catch((error) => {
         console.error('Error creating customer:', error);
