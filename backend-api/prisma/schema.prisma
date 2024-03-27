@@ -8,7 +8,23 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// prisma/schema.prisma
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  orders    Order[]
+}
+
+model Order {
+  id          Int      @id @default(autoincrement())
+  totalPrice  Float
+  customerId  Int
+  customer    Customer @relation(fields: [customerId], references: [id])
 }
