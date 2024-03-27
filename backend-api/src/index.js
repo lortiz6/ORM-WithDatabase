@@ -1,5 +1,3 @@
-// src/index.js
-
 const express = require('express');
 const { ApolloServer, gql } = require('apollo-server-express');
 const { PrismaClient } = require('@prisma/client');
@@ -44,8 +42,16 @@ const resolvers = {
 
 const server = new ApolloServer({ typeDefs, resolvers });
 
-server.applyMiddleware({ app });
+async function startServer() {
+  await server.start();
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  server.applyMiddleware({ app });
+
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+  });
+}
+
+startServer().catch((error) => {
+  console.error('Error starting server:', error);
 });
