@@ -11,7 +11,7 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <div className="App">
-        <h1>Customer Management App</h1>
+        <h1>ORM - Customer Management App</h1>
         <CustomerList />
       </div>
     </ApolloProvider>
