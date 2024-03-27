@@ -45,13 +45,20 @@ const server = new ApolloServer({ typeDefs, resolvers });
 async function startServer() {
   await server.start();
 
+// Applying middleware for GraphQL endpoint
   server.applyMiddleware({ app });
 
+  // Define a basic route for the root URL
+app.get('/', (req, res) => {
+  res.send('Server is running. Visit /graphql to access the GraphQL API.');
+});
+
+// Listen for incoming requests on the specified port
   app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
   });
 }
-
+// Start the server
 startServer().catch((error) => {
   console.error('Error starting server:', error);
 });
