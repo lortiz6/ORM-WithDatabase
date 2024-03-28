@@ -1,0 +1,15 @@
+type Customer {
+  id: Int!
+  name: String!
+  email: String!
+}
+
+extend type Query {
+  customers: [Customer!]!
+}
+
+extend type Mutation {
+  createCustomer(name: String!, email: String!): Customer!
+  updateCustomer(id: Int!, name: String!, email: String!): Customer!
+  deleteCustomer(id: Int!): Customer!
+}
