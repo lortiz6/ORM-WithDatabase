@@ -16,10 +16,14 @@ const typeDefs = gql`
     id: Int!
     name: String!
     email: String!
+    createdAt: String!
+    updatedAt: String!
   }
 
   type Mutation {
     createCustomer(name: String!, email: String!): Customer!
+    updateCustomer(id: Int!, name: String!, email: String!): Customer!
+    deleteCustomer(id: Int!): Customer!
   }
 `;
 
@@ -31,12 +35,56 @@ const resolvers = {
   },
   Mutation: {
     createCustomer: async (_, { name, email }) => {
-      return await prisma.customer.create({
+      const newCustomer = await prisma.customer.create({
         data: {
           name,
           email,
         },
       });
+
+      const customerWithTimestamps = await prisma.customer.findUnique({
+        where: {
+          id: newCustomer.id,
+        },
+      });
+
+      return {
+        ...customerWithTimestamps,
+        createdAt: customerWithTimestamps.createdAt.toISOString(),
+        updatedAt: customerWithTimestamps.updatedAt.toISOString(),
+      };
+    },
+    updateCustomer: async (_, { id, name, email }) => {
+      const updatedCustomer = await prisma.customer.update({
+        where: { id },
+        data: {
+          name,
+          email,
+        },
+      });
+
+      const customerWithTimestamps = await prisma.customer.findUnique({
+        where: {
+          id: updatedCustomer.id,
+        },
+      });
+
+      return {
+        ...customerWithTimestamps,
+        createdAt: customerWithTimestamps.createdAt.toISOString(),
+        updatedAt: customerWithTimestamps.updatedAt.toISOString(),
+      };
+    },
+    deleteCustomer: async (_, { id }) => {
+      const deletedCustomer = await prisma.customer.delete({
+        where: { id },
+      });
+
+      return {
+        ...deletedCustomer,
+        createdAt: deletedCustomer.createdAt.toISOString(),
+        updatedAt: deletedCustomer.updatedAt.toISOString(),
+      };
     },
   },
 };
@@ -48,9 +96,9 @@ async function startServer() {
 
   server.applyMiddleware({ app });
 
-app.get('/', (req, res) => {
-  res.send('Server is running. Visit /graphql to access the GraphQL API.');
-});
+  app.get('/', (req, res) => {
+    res.send('Server is running. Visit /graphql to access the GraphQL API.');
+  });
 
   app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
