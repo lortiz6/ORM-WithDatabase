@@ -2,10 +2,16 @@ type Customer {
   id: Int!
   name: String!
   email: String!
-  orders: [Order!]!
   description: String
   createdAt: DateTime!
   updatedAt: DateTime!
+  orders: [Order!]!
+}
+
+type Order {
+  id: Int!
+  totalPrice: Float!
+  customer: Customer!
 }
 
 extend type Query {
