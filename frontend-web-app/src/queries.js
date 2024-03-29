@@ -7,6 +7,10 @@ export const GET_CUSTOMERS = gql`
       name
       email
       description
+      orders {
+        id
+        totalPrice
+      }
       createdAt
       updatedAt
     }
