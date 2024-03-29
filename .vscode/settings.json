@@ -1,0 +1,14 @@
+{
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "ORM-Local",
+      "database": "ORM-WithDatabase",
+      "username": "postgres",
+      "connectionTimeout": 30
+    }
+  ]
+}
