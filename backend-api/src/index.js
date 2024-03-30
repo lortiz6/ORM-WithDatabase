@@ -16,14 +16,22 @@ const typeDefs = gql`
     id: Int!
     name: String!
     email: String!
+    description: String
     createdAt: String!
     updatedAt: String!
+    orders: [Order!]!
+  }
+
+  type Order {
+    id: Int!
+    totalPrice: Float!
   }
 
   type Mutation {
     createCustomer(name: String!, email: String!): Customer!
     updateCustomer(id: Int!, name: String!, email: String!): Customer!
     deleteCustomer(id: Int!): Customer!
+    createOrder(customerId: Int!, totalPrice: Float!): Order!
   }
 `;
 

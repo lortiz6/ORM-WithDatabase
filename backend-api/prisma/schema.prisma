@@ -8,18 +8,20 @@ datasource db {
 }
 
 model Customer {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
+  id          Int       @id @default(autoincrement())
+  name        String
+  email       String    @unique
   description String?
-  orders    Order[]
+  orders      Order[]
   createdAt   DateTime  @default(now())
-  updatedAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
 }
 
 model Order {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   totalPrice  Float
   customerId  Int
-  customer    Customer @relation(fields: [customerId], references: [id])
+  customer    Customer  @relation(fields: [customerId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
 }
