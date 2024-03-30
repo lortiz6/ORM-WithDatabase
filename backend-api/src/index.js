@@ -7,6 +7,8 @@ const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+app.use(cors());
+
 const typeDefs = gql`
   type Query {
     customers: [Customer!]!
@@ -19,7 +21,7 @@ const typeDefs = gql`
     description: String
     createdAt: String!
     updatedAt: String!
-    orders: [Order!]!
+    orders: [Order]
   }
 
   type Order {
@@ -39,6 +41,15 @@ const resolvers = {
   Query: {
     customers: async () => {
       return await prisma.customer.findMany();
+    },
+  },
+  Customer: {
+    orders: async (parent) => {
+      if (parent.orders && parent.orders.length > 0) {
+        return parent.orders;
+      } else {
+        return [];
+      }
     },
   },
   Mutation: {
