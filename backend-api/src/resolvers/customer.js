@@ -4,14 +4,16 @@ const customerResolvers = {
   Query: {
     customers: async () => {
       const customers = await customerModel.getAllCustomersWithOrders();
+      console.log("Retrieved customers with orders:", customers);
       return customers;
     },
   },
   Customer: {
     orders: async (parent) => {
       if (parent.orders && parent.orders.length > 0) {
-        return parent.orders;
+        return parent.orders || [];
       } else {
+        console.log("No orders found for customer:", parent.id);
         return [];
       }
     },
