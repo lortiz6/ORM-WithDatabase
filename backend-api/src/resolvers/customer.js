@@ -9,7 +9,7 @@ const customerResolvers = {
   },
   Customer: {
     orders: async (parent) => {
-      if (parent.orders) {
+      if (parent.orders && parent.orders.length > 0) {
         return parent.orders;
       } else {
         return [];
