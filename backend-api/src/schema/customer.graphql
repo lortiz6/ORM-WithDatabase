@@ -5,7 +5,7 @@ type Customer {
   description: String
   createdAt: DateTime!
   updatedAt: DateTime!
-  orders: [Order!]!
+  orders: [Order]
 }
 
 type Order {
