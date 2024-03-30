@@ -7,6 +7,15 @@ const customerResolvers = {
       return customers;
     },
   },
+  Customer: {
+    orders: async (parent) => {
+      if (parent.orders) {
+        return parent.orders;
+      } else {
+        return [];
+      }
+    },
+  },
   Mutation: {
     createCustomer: async (_, { name, email, description }) => {
       return await customerModel.createCustomer(name, email, description);
