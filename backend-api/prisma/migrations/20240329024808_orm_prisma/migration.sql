@@ -7,6 +7,13 @@ CREATE TABLE "Customer" (
     "updatedAt" TIMESTAMP NOT NULL
 );
 
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_indexes WHERE indexname = 'Customer_email_key') THEN
+        CREATE UNIQUE INDEX "Customer_email_key" ON "Customer"("email");
+    END IF;
+END $$;
+
 CREATE TABLE "Order" (
     "id" SERIAL PRIMARY KEY,
     "totalPrice" DOUBLE PRECISION NOT NULL,
@@ -15,5 +22,3 @@ CREATE TABLE "Order" (
     "updatedAt" TIMESTAMP NOT NULL,
     CONSTRAINT "Order_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "Customer"("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
-
-CREATE UNIQUE INDEX "Customer_email_key" ON "Customer"("email");
