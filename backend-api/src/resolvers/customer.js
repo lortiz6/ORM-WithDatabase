@@ -22,11 +22,20 @@ const customerResolvers = {
     createCustomer: async (_, { name, email, description }) => {
       return await customerModel.createCustomer(name, email, description);
     },
-    updateCustomer: async (_, { id, name, email, description, orders }) => {
-      return await customerModel.updateCustomer(id, name, email, description, orders);
+    updateCustomer: async (_, { id, name, email, description }) => {
+      return await customerModel.updateCustomer(id, name, email, description);
     },
     deleteCustomer: async (_, { id }) => {
       return await customerModel.deleteCustomer(id);
+    },
+    createOrder: async (_, { customerId, totalPrice }) => {
+      return await customerModel.createOrder(customerId, totalPrice);
+    },
+    updateOrder: async (_, { id, totalPrice }) => {
+      return await customerModel.updateOrder(id, totalPrice);
+    },
+    deleteOrder: async (_, { id }) => {
+      return await customerModel.deleteOrder(id);
     },
   },
 };

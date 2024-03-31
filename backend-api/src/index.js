@@ -34,6 +34,8 @@ const typeDefs = gql`
     updateCustomer(id: Int!, name: String!, email: String!): Customer!
     deleteCustomer(id: Int!): Customer!
     createOrder(customerId: Int!, totalPrice: Float!): Order!
+    updateOrder(id: Int!, totalPrice: Float!): Order!
+    deleteOrder(id: Int!): Order!
   }
 `;
 
@@ -104,6 +106,30 @@ const resolvers = {
         createdAt: deletedCustomer.createdAt.toISOString(),
         updatedAt: deletedCustomer.updatedAt.toISOString(),
       };
+    },
+    createOrder: async (_, { customerId, totalPrice }) => {
+      const newOrder = await prisma.order.create({
+        data: {
+          customerId,
+          totalPrice,
+        },
+      });
+      return newOrder;
+    },
+    updateOrder: async (_, { id, totalPrice }) => {
+      const updatedOrder = await prisma.order.update({
+        where: { id },
+        data: {
+          totalPrice,
+        },
+      });
+      return updatedOrder;
+    },
+    deleteOrder: async (_, { id }) => {
+      const deletedOrder = await prisma.order.delete({
+        where: { id },
+      });
+      return deletedOrder;
     },
   },
 };

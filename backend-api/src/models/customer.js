@@ -43,6 +43,30 @@ const customerModel = {
     });
   },
 
+  async createOrder(customerId, totalPrice) {
+    return await prisma.order.create({
+      data: {
+        customerId,
+        totalPrice,
+      },
+    });
+  },
+
+  async updateOrder(id, totalPrice) {
+    return await prisma.order.update({
+      where: { id },
+      data: {
+        totalPrice,
+      },
+    });
+  },
+
+  async deleteOrder(id) {
+    return await prisma.order.delete({
+      where: { id },
+    });
+  },
+
   async getAllCustomers() {
     return await prisma.customer.findMany({
       include: {

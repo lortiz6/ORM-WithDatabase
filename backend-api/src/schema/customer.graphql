@@ -22,4 +22,6 @@ extend type Mutation {
   updateCustomer(id: Int!, name: String!, email: String!): Customer!
   deleteCustomer(id: Int!): Customer!
   createOrder(customerId: Int!, totalPrice: Float!): Order!
+  updateOrder(id: Int!, totalPrice: Float!): Order!
+  deleteOrder(id: Int!): Order!
 }

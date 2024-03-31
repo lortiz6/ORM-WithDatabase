@@ -9,15 +9,13 @@ const CreateOrderForm = ({ customerId }) => {
 
   const [createOrder] = useMutation(CREATE_ORDER);
 
-  const handleFormSubmit = async (e) => {
+  const handleCreateOrder = async (e) => {
     e.preventDefault();
     try {
       await createOrder({
         variables: {
-          input: {
-            customerId,
-            totalPrice: parseFloat(totalPrice),
-          },
+          customerId,
+          totalPrice: parseFloat(totalPrice),
         },
       });
       setSuccessMessage('Order created successfully.');
@@ -32,7 +30,7 @@ const CreateOrderForm = ({ customerId }) => {
   return (
     <div>
       <h2>Create Order</h2>
-      <form onSubmit={handleFormSubmit}>
+      <form onSubmit={handleCreateOrder}>
         <label htmlFor="totalPrice">Total Price:</label>
         <input
           type="number"
