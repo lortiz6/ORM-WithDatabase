@@ -13,15 +13,28 @@ type Order {
   totalPrice: Float!
 }
 
+type Product {
+  id: Int!
+  name: String!
+  price: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 extend type Query {
   customers: [Customer!]!
+  products: [Product!]!
+  orders: [Order!]!
 }
 
 extend type Mutation {
-  createCustomer(name: String!, email: String!): Customer!
-  updateCustomer(id: Int!, name: String!, email: String!): Customer!
+  createCustomer(name: String!, email: String!, description: String): Customer!
+  updateCustomer(id: Int!, name: String!, email: String!, description: String): Customer!
   deleteCustomer(id: Int!): Customer!
   createOrder(customerId: Int!, totalPrice: Float!): Order!
   updateOrder(id: Int!, totalPrice: Float!): Order!
   deleteOrder(id: Int!): Order!
+  createProduct(name: String!, price: Float!): Product!
+  updateProduct(id: Int!, name: String!, price: Float!): Product!
+  deleteProduct(id: Int!): Product!
 }

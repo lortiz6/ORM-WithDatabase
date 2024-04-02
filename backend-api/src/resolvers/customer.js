@@ -3,9 +3,15 @@ const customerModel = require('../models/customer');
 const customerResolvers = {
   Query: {
     customers: async () => {
-      const customers = await customerModel.getAllCustomersWithOrders();
-      console.log("Retrieved customers with orders:", customers);
+      const customers = await customerModel.getAllCustomers();
+      console.log("Retrieved customers:", customers);
       return customers;
+    },
+    products: async () => {
+      return await customerModel.getAllProducts();
+    },
+    orders: async () => {
+      return await customerModel.getAllOrders();
     },
   },
   Customer: {
@@ -36,6 +42,15 @@ const customerResolvers = {
     },
     deleteOrder: async (_, { id }) => {
       return await customerModel.deleteOrder(id);
+    },
+    createProduct: async (_, { name, price }) => {
+      return await customerModel.createProduct(name, price);
+    },
+    updateProduct: async (_, { id, name, price }) => {
+      return await customerModel.updateProduct(id, name, price);
+    },
+    deleteProduct: async (_, { id }) => {
+      return await customerModel.deleteProduct(id);
     },
   },
 };

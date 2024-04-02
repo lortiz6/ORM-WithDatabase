@@ -67,12 +67,48 @@ const customerModel = {
     });
   },
 
+  async createProduct(name, price) {
+    return await prisma.product.create({
+      data: {
+        name,
+        price,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    });
+  },
+
+  async updateProduct(id, name, price) {
+    return await prisma.product.update({
+      where: { id },
+      data: {
+        name,
+        price,
+        updatedAt: new Date(),
+      },
+    });
+  },
+
+  async deleteProduct(id) {
+    return await prisma.product.delete({
+      where: { id },
+    });
+  },
+
   async getAllCustomers() {
     return await prisma.customer.findMany({
       include: {
         orders: true,
       },
     });
+  },
+
+  async getAllProducts() {
+    return await prisma.product.findMany();
+  },
+
+  async getAllOrders() {
+    return await prisma.order.findMany();
   },
 };
 

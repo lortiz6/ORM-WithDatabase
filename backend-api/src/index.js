@@ -12,6 +12,8 @@ app.use(cors());
 const typeDefs = gql`
   type Query {
     customers: [Customer!]!
+    products: [Product!]!
+    orders: [Order!]!
   }
 
   type Customer {
@@ -19,8 +21,8 @@ const typeDefs = gql`
     name: String!
     email: String!
     description: String
-    createdAt: String!
-    updatedAt: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
     orders: [Order]
   }
 
@@ -29,13 +31,24 @@ const typeDefs = gql`
     totalPrice: Float!
   }
 
+  type Product {
+    id: Int!
+    name: String!
+    price: Float!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+  }
+
   type Mutation {
-    createCustomer(name: String!, email: String!): Customer!
-    updateCustomer(id: Int!, name: String!, email: String!): Customer!
+    createCustomer(name: String!, email: String!, description: String): Customer!
+    updateCustomer(id: Int!, name: String!, email: String!, description: String): Customer!
     deleteCustomer(id: Int!): Customer!
     createOrder(customerId: Int!, totalPrice: Float!): Order!
     updateOrder(id: Int!, totalPrice: Float!): Order!
     deleteOrder(id: Int!): Order!
+    createProduct(name: String!, price: Float!): Product!
+    updateProduct(id: Int!, name: String!, price: Float!): Product!
+    deleteProduct(id: Int!): Product!
   }
 `;
 
@@ -43,6 +56,12 @@ const resolvers = {
   Query: {
     customers: async () => {
       return await prisma.customer.findMany();
+    },
+    products: async () => {
+      return await prisma.product.findMany();
+    },
+    orders: async () => {
+      return await prisma.order.findMany();
     },
   },
   Customer: {
@@ -55,57 +74,35 @@ const resolvers = {
     },
   },
   Mutation: {
-    createCustomer: async (_, { name, email }) => {
+    createCustomer: async (_, { name, email, description }) => {
       const newCustomer = await prisma.customer.create({
         data: {
           name,
           email,
+          description,
         },
       });
 
-      const customerWithTimestamps = await prisma.customer.findUnique({
-        where: {
-          id: newCustomer.id,
-        },
-      });
-
-      return {
-        ...customerWithTimestamps,
-        createdAt: customerWithTimestamps.createdAt.toISOString(),
-        updatedAt: customerWithTimestamps.updatedAt.toISOString(),
-      };
+      return newCustomer;
     },
-    updateCustomer: async (_, { id, name, email }) => {
+    updateCustomer: async (_, { id, name, email, description }) => {
       const updatedCustomer = await prisma.customer.update({
         where: { id },
         data: {
           name,
           email,
+          description,
         },
       });
 
-      const customerWithTimestamps = await prisma.customer.findUnique({
-        where: {
-          id: updatedCustomer.id,
-        },
-      });
-
-      return {
-        ...customerWithTimestamps,
-        createdAt: customerWithTimestamps.createdAt.toISOString(),
-        updatedAt: customerWithTimestamps.updatedAt.toISOString(),
-      };
+      return updatedCustomer;
     },
     deleteCustomer: async (_, { id }) => {
       const deletedCustomer = await prisma.customer.delete({
         where: { id },
       });
 
-      return {
-        ...deletedCustomer,
-        createdAt: deletedCustomer.createdAt.toISOString(),
-        updatedAt: deletedCustomer.updatedAt.toISOString(),
-      };
+      return deletedCustomer;
     },
     createOrder: async (_, { customerId, totalPrice }) => {
       const newOrder = await prisma.order.create({
@@ -130,6 +127,31 @@ const resolvers = {
         where: { id },
       });
       return deletedOrder;
+    },
+    createProduct: async (_, { name, price }) => {
+      const newProduct = await prisma.product.create({
+        data: {
+          name,
+          price,
+        },
+      });
+      return newProduct;
+    },
+    updateProduct: async (_, { id, name, price }) => {
+      const updatedProduct = await prisma.product.update({
+        where: { id },
+        data: {
+          name,
+          price,
+        },
+      });
+      return updatedProduct;
+    },
+    deleteProduct: async (_, { id }) => {
+      const deletedProduct = await prisma.product.delete({
+        where: { id },
+      });
+      return deletedProduct;
     },
   },
 };
