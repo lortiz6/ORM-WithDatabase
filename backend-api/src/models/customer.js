@@ -26,13 +26,26 @@ const customerModel = {
             where: { id: order.id },
             data: {
               totalPrice: order.totalPrice,
+              products: {
+                update: order.products.map(product => ({
+                  where: { id: product.id },
+                  data: {
+                    name: product.name,
+                    price: product.price,
+                  },
+                })),
+              },
             },
           })),
         },
         updatedAt: new Date(),
       },
       include: {
-        orders: true,
+        orders: {
+          include: {
+            products: true,
+          },
+        },
       },
     });
   },

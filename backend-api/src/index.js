@@ -29,6 +29,10 @@ const typeDefs = gql`
   type Order {
     id: Int!
     totalPrice: Float!
+    customer: Customer!
+    products: [Product!]!
+    createdAt: DateTime!
+    updatedAt: DateTime!
   }
 
   type Product {
@@ -37,6 +41,7 @@ const typeDefs = gql`
     price: Float!
     createdAt: DateTime!
     updatedAt: DateTime!
+    order: Order
   }
 
   type Mutation {
@@ -66,27 +71,42 @@ const resolvers = {
   },
   Customer: {
     orders: async (parent) => {
-      if (parent.orders && parent.orders.length > 0) {
-        return parent.orders;
-      } else {
-        return [];
-      }
+      return await prisma.customer
+        .findUnique({ where: { id: parent.id } })
+        .orders();
+    },
+  },
+  Order: {
+    customer: async (parent) => {
+      return await prisma.order
+        .findUnique({ where: { id: parent.id } })
+        .customer();
+    },
+    products: async (parent) => {
+      return await prisma.order
+        .findUnique({ where: { id: parent.id } })
+        .products();
+    },
+  },
+  Product: {
+    order: async (parent) => {
+      return await prisma.product
+        .findUnique({ where: { id: parent.id } })
+        .order();
     },
   },
   Mutation: {
     createCustomer: async (_, { name, email, description }) => {
-      const newCustomer = await prisma.customer.create({
+      return await prisma.customer.create({
         data: {
           name,
           email,
           description,
         },
       });
-
-      return newCustomer;
     },
     updateCustomer: async (_, { id, name, email, description }) => {
-      const updatedCustomer = await prisma.customer.update({
+      return await prisma.customer.update({
         where: { id },
         data: {
           name,
@@ -94,64 +114,54 @@ const resolvers = {
           description,
         },
       });
-
-      return updatedCustomer;
     },
     deleteCustomer: async (_, { id }) => {
-      const deletedCustomer = await prisma.customer.delete({
+      return await prisma.customer.delete({
         where: { id },
       });
-
-      return deletedCustomer;
     },
     createOrder: async (_, { customerId, totalPrice }) => {
-      const newOrder = await prisma.order.create({
+      return await prisma.order.create({
         data: {
           customerId,
           totalPrice,
         },
       });
-      return newOrder;
     },
     updateOrder: async (_, { id, totalPrice }) => {
-      const updatedOrder = await prisma.order.update({
+      return await prisma.order.update({
         where: { id },
         data: {
           totalPrice,
         },
       });
-      return updatedOrder;
     },
     deleteOrder: async (_, { id }) => {
-      const deletedOrder = await prisma.order.delete({
+      return await prisma.order.delete({
         where: { id },
       });
-      return deletedOrder;
     },
     createProduct: async (_, { name, price }) => {
-      const newProduct = await prisma.product.create({
+      return await prisma.product.create({
         data: {
           name,
           price,
         },
       });
-      return newProduct;
     },
     updateProduct: async (_, { id, name, price }) => {
-      const updatedProduct = await prisma.product.update({
+      return await prisma.product.update({
         where: { id },
         data: {
           name,
           price,
         },
       });
-      return updatedProduct;
     },
     deleteProduct: async (_, { id }) => {
-      const deletedProduct = await prisma.product.delete({
+      return await prisma.product.delete({
         where: { id },
       });
-      return deletedProduct;
     },
   },
 };
