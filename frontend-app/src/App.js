@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import CustomersPage from './pages/CustomersPage';
 import OrdersPage from './pages/OrdersPage';
 import ProductsPage from './pages/ProductsPage';
-import './css/style.css'; // Import style.css here
+import './css/style.css';
 
 function App() {
   return (
