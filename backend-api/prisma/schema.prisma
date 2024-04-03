@@ -14,7 +14,7 @@ model Customer {
   description String?
   orders      Order[]
   createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  updatedAt   DateTime?  @updatedAt
 }
 
 model Order {
@@ -23,7 +23,7 @@ model Order {
   customerId  Int
   customer    Customer  @relation(fields: [customerId], references: [id])
   createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  updatedAt   DateTime?  @updatedAt
   products    Product[]
 }
 
@@ -32,7 +32,7 @@ model Product {
   name        String
   price       Float
   createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  orderId     Int?      // Add a field to store the order ID
+  updatedAt   DateTime?  @updatedAt
+  orderId     Int?
   order       Order?    @relation(fields: [orderId], references: [id])
 }

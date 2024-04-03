@@ -21,8 +21,8 @@ const typeDefs = gql`
     name: String!
     email: String!
     description: String
-    createdAt: DateTime!
-    updatedAt: DateTime!
+    createdAt: String!
+    updatedAt: String!
     orders: [Order]
   }
 
@@ -31,16 +31,16 @@ const typeDefs = gql`
     totalPrice: Float!
     customer: Customer!
     products: [Product!]!
-    createdAt: DateTime!
-    updatedAt: DateTime!
+    createdAt: String!
+    updatedAt: String!
   }
 
   type Product {
     id: Int!
     name: String!
     price: Float!
-    createdAt: DateTime!
-    updatedAt: DateTime!
+    createdAt: String!
+    updatedAt: String!
     order: Order
   }
 
