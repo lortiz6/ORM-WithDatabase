@@ -1,0 +1,27 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  border: 2px solid red;
+  padding: 20px;
+}
+
+.main-title {
+  text-align: center;
+}
+
+.content-container {
+  margin-top: 20px;
+}
+
+.list-container {
+  margin-top: 20px;
+}
+
+.list-item {
+  margin-bottom: 10px;
+}
+
+.btn {
+  padding: 5px 10px;
+  margin-right: 5px;
+}
