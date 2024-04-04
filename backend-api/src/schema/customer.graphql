@@ -13,6 +13,7 @@ type Customer {
 type Order {
   id: Int!
   totalPrice: Float!
+  customer: Customer
   products: [Product!]!
 }
 
