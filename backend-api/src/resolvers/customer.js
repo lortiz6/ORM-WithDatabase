@@ -1,56 +1,167 @@
-const customerModel = require('../models/customer');
+const { PrismaClient } = require('@prisma/client');
+
+const prisma = new PrismaClient();
 
 const customerResolvers = {
   Query: {
     customers: async () => {
-      const customers = await customerModel.getAllCustomers();
-      console.log("Retrieved customers:", customers);
-      return customers;
+      return prisma.customer.findMany();
     },
-    products: async () => {
-      return await customerModel.getAllProducts();
+    customer: async (_, { id }) => {
+      return prisma.customer.findUnique({
+        where: { id }
+      });
     },
-    orders: async () => {
-      return await customerModel.getAllOrders();
+    orders: async (_, { customerId }) => {
+      return prisma.order.findMany({
+        where: {
+          customerId
+        }
+      });
     },
-  },
-  Customer: {
-    orders: async (parent) => {
-      if (parent.orders && parent.orders.length > 0) {
-        return parent.orders || [];
-      } else {
-        console.log("No orders found for customer:", parent.id);
-        return [];
-      }
+    order: async (_, { id }) => {
+      return prisma.order.findUnique({
+        where: { id }
+      });
+    },
+    products: async (_, { orderId }) => {
+      return prisma.product.findMany({
+        where: {
+          orderId
+        }
+      });
+    },
+    product: async (_, { id }) => {
+      return prisma.product.findUnique({
+        where: { id }
+      });
     },
   },
   Mutation: {
     createCustomer: async (_, { name, email, description }) => {
-      return await customerModel.createCustomer(name, email, description);
+      return prisma.customer.create({
+        data: {
+          name,
+          email,
+          description
+        }
+      });
+    },
+    createOrder: async (_, { totalPrice, customerId }) => {
+      return prisma.order.create({
+        data: {
+          totalPrice,
+          customer: {
+            connect: { id: customerId }
+          }
+        }
+      });
+    },
+    createProduct: async (_, { name, price, orderId }) => {
+      return prisma.product.create({
+        data: {
+          name,
+          price,
+          order: {
+            connect: { id: orderId }
+          }
+        }
+      });
     },
     updateCustomer: async (_, { id, name, email, description }) => {
-      return await customerModel.updateCustomer(id, name, email, description);
+      return prisma.customer.update({
+        where: { id },
+        data: {
+          name,
+          email,
+          description
+        }
+      });
     },
     deleteCustomer: async (_, { id }) => {
-      return await customerModel.deleteCustomer(id);
-    },
-    createOrder: async (_, { customerId, totalPrice }) => {
-      return await customerModel.createOrder(customerId, totalPrice);
-    },
-    updateOrder: async (_, { id, totalPrice }) => {
-      return await customerModel.updateOrder(id, totalPrice);
+      return prisma.customer.delete({
+        where: { id }
+      });
     },
     deleteOrder: async (_, { id }) => {
-      return await customerModel.deleteOrder(id);
-    },
-    createProduct: async (_, { name, price }) => {
-      return await customerModel.createProduct(name, price);
-    },
-    updateProduct: async (_, { id, name, price }) => {
-      return await customerModel.updateProduct(id, name, price);
+      return prisma.order.delete({
+        where: { id }
+      });
     },
     deleteProduct: async (_, { id }) => {
-      return await customerModel.deleteProduct(id);
+      return prisma.product.delete({
+        where: { id }
+      });
+    },
+  },
+  Customer: {
+    description: async (parent) => {
+      return parent.description;
+    },
+    orders: async (parent) => {
+      return prisma.order.findMany({
+        where: {
+          customerId: parent.id
+        }
+      });
+    },
+    createdAt: async (parent) => {
+      return parent.createdAt;
+    },
+    updatedAt: async (parent) => {
+      return parent.updatedAt;
+    },
+    email: async (parent) => {
+      return parent.email;
+    },
+    name: async (parent) => {
+      return parent.name;
+    },
+  },
+  Order: {
+    totalPrice: async (parent) => {
+      return parent.totalPrice;
+    },
+    customer: async (parent) => {
+      return prisma.customer.findUnique({
+        where: {
+          id: parent.customerId
+        }
+      });
+    },
+    createdAt: async (parent) => {
+      return parent.createdAt;
+    },
+    updatedAt: async (parent) => {
+      return parent.updatedAt;
+    },
+    products: async (parent) => {
+      return prisma.product.findMany({
+        where: {
+          orderId: parent.id
+        }
+      });
+    },
+  },
+  Product: {
+    name: async (parent) => {
+      return parent.name;
+    },
+    price: async (parent) => {
+      return parent.price;
+    },
+    createdAt: async (parent) => {
+      return parent.createdAt;
+    },
+    updatedAt: async (parent) => {
+      return parent.updatedAt;
+    },
+    order: async (parent) => {
+      return prisma.order.findUnique({
+        where: {
+          id: parent.orderId
+        }
+      });
     },
   },
 };

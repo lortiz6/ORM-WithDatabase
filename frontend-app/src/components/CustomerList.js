@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 const CustomerList = ({ customers }) => {
   return (
     <div>

@@ -15,16 +15,13 @@ const OrdersPage = () => {
 
   const handleCreateOrder = async () => {
     await createOrder(newOrderData);
-    // Refresh the list of orders after creating a new one
     const updatedOrders = await getOrders();
     setOrders(updatedOrders);
-    // Clear the form fields after creating a new order
     setNewOrderData({ totalPrice: 0 });
   };
 
   const handleDeleteOrder = async (orderId) => {
     await deleteOrder(orderId);
-    // Refresh the list of orders after deleting one
     const updatedOrders = await getOrders();
     setOrders(updatedOrders);
   };

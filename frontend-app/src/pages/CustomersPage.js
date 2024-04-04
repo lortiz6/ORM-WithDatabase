@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getCustomers, createCustomer, deleteCustomer } from '../services/api';
-
+import { getAllCustomers, createCustomer, deleteCustomer } from '../services/api';
 
 const CustomersPage = () => {
   const [customers, setCustomers] = useState([]);
@@ -8,7 +7,7 @@ const CustomersPage = () => {
 
   useEffect(() => {
     const fetchCustomers = async () => {
-      const data = await getCustomers();
+      const data = await getAllCustomers();
       setCustomers(data);
     };
     fetchCustomers();
@@ -16,17 +15,14 @@ const CustomersPage = () => {
 
   const handleCreateCustomer = async () => {
     await createCustomer(newCustomerData);
-    // Refresh the list of customers after creating a new one
-    const updatedCustomers = await getCustomers();
+    const updatedCustomers = await getAllCustomers();
     setCustomers(updatedCustomers);
-    // Clear the form fields after creating a new customer
     setNewCustomerData({ name: '', email: '', description: '' });
   };
 
   const handleDeleteCustomer = async (customerId) => {
     await deleteCustomer(customerId);
-    // Refresh the list of customers after deleting one
-    const updatedCustomers = await getCustomers();
+    const updatedCustomers = await getAllCustomers();
     setCustomers(updatedCustomers);
   };
 
