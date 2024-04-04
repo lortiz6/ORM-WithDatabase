@@ -1,7 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-import { Switch } from 'react-router-dom';
-
 
 const customerModel = {
   async createCustomer(name, email, description) {
