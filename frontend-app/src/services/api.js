@@ -1,129 +1,134 @@
-import axios from 'axios';
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+import { Switch } from 'react-router-dom';
 
-const BASE_URL = 'http://localhost:4000';
 
-const api = axios.create({
-  baseURL: BASE_URL,
-});
+const customerModel = {
+  async createCustomer(name, email, description) {
+    return await prisma.customer.create({
+      data: {
+        name,
+        email,
+        description,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    });
+  },
 
-export const getAllCustomers = async () => {
-  try {
-    const response = await api.get('/customers');
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching customers:', error);
-    return [];
-  }
+  async updateCustomer(id, name, email, description, orders) {
+    return await prisma.customer.update({
+      where: { id },
+      data: {
+        name,
+        email,
+        description,
+        orders: {
+          update: orders.map(order => ({
+            where: { id: order.id },
+            data: {
+              totalPrice: order.totalPrice,
+              products: {
+                update: order.products.map(product => ({
+                  where: { id: product.id },
+                  data: {
+                    name: product.name,
+                    price: product.price,
+                  },
+                })),
+              },
+            },
+          })),
+        },
+        updatedAt: new Date(),
+      },
+      include: {
+        orders: {
+          include: {
+            products: true,
+          },
+        },
+      },
+    });
+  },
+
+  async deleteCustomer(id) {
+    return await prisma.customer.delete({
+      where: { id },
+    });
+  },
+
+  async createOrder(customerId, totalPrice) {
+    return await prisma.order.create({
+      data: {
+        customerId,
+        totalPrice,
+      },
+    });
+  },
+
+  async updateOrder(id, totalPrice) {
+    return await prisma.order.update({
+      where: { id },
+      data: {
+        totalPrice,
+      },
+    });
+  },
+
+  async deleteOrder(id) {
+    return await prisma.order.delete({
+      where: { id },
+    });
+  },
+
+  async createProduct(name, price) {
+    return await prisma.product.create({
+      data: {
+        name,
+        price,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    });
+  },
+
+  async updateProduct(id, name, price) {
+    return await prisma.product.update({
+      where: { id },
+      data: {
+        name,
+        price,
+        updatedAt: new Date(),
+      },
+    });
+  },
+
+  async deleteProduct(id) {
+    return await prisma.product.delete({
+      where: { id },
+    });
+  },
+
+  async getAllCustomers() {
+    return await prisma.customer.findMany({
+      include: {
+        orders: true,
+      },
+    });
+  },
+
+  async getAllProducts() {
+    return await prisma.product.findMany();
+  },
+
+  async getAllOrders() {
+    return await prisma.order.findMany();
+  },
 };
 
-export const getAllOrders = async () => {
-  try {
-    const response = await api.get('/orders');
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching orders:', error);
-    return [];
-  }
+module.exports = {
+  getAllCustomers: customerModel.getAllCustomers,
+  getAllOrders: customerModel.getAllOrders,
+  getAllProducts: customerModel.getAllProducts,
 };
-
-export const getAllProducts = async () => {
-  try {
-    const response = await api.get('/products');
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching products:', error);
-    return [];
-  }
-};
-
-export const createCustomer = async (customerData) => {
-  try {
-    const response = await api.post('/customers', customerData);
-    return response.data;
-  } catch (error) {
-    console.error('Error creating customer:', error);
-    return null;
-  }
-};
-
-export const updateCustomer = async (customerId, customerData) => {
-  try {
-    const response = await api.put(`/customers/${customerId}`, customerData);
-    return response.data;
-  } catch (error) {
-    console.error('Error updating customer:', error);
-    return null;
-  }
-};
-
-export const deleteCustomer = async (customerId) => {
-  try {
-    const response = await api.delete(`/customers/${customerId}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error deleting customer:', error);
-    return null;
-  }
-};
-
-export const createOrder = async (orderData) => {
-  try {
-    const response = await api.post('/orders', orderData);
-    return response.data;
-  } catch (error) {
-    console.error('Error creating order:', error);
-    return null;
-  }
-};
-
-export const updateOrder = async (orderId, orderData) => {
-  try {
-    const response = await api.put(`/orders/${orderId}`, orderData);
-    return response.data;
-  } catch (error) {
-    console.error('Error updating order:', error);
-    return null;
-  }
-};
-
-export const deleteOrder = async (orderId) => {
-  try {
-    const response = await api.delete(`/orders/${orderId}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error deleting order:', error);
-    return null;
-  }
-};
-
-export const createProduct = async (productData) => {
-  try {
-    const response = await api.post('/products', productData);
-    return response.data;
-  } catch (error) {
-    console.error('Error creating product:', error);
-    return null;
-  }
-};
-
-export const updateProduct = async (productId, productData) => {
-  try {
-    const response = await api.put(`/products/${productId}`, productData);
-    return response.data;
-  } catch (error) {
-    console.error('Error updating product:', error);
-    return null;
-  }
-};
-
-export const deleteProduct = async (productId) => {
-  try {
-    const response = await api.delete(`/products/${productId}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error deleting product:', error);
-    return null;
-  }
-};
-
-export default api;
