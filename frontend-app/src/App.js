@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import CustomersPage from './pages/CustomersPage';
 import OrdersPage from './pages/OrdersPage';
 import ProductsPage from './pages/ProductsPage';
@@ -8,16 +8,11 @@ import './css/style.css';
 function App() {
   return (
     <Router>
-      <div className="container">
-        <h1>ORM - Customer Management App</h1>
-        <div className="content">
-          <Switch>
-            <Route exact path="/customers" component={CustomersPage} />
-            <Route exact path="/orders" component={OrdersPage} />
-            <Route exact path="/products" component={ProductsPage} />
-          </Switch>
-        </div>
-      </div>
+      <Routes>
+        <Route path="/customers" element={<CustomersPage />} />
+        <Route path="/orders" element={<OrdersPage />} />
+        <Route path="/products" element={<ProductsPage />} />
+      </Routes>
     </Router>
   );
 }
