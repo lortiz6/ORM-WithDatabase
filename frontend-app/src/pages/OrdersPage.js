@@ -5,17 +5,17 @@ function OrdersPage() {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const fetchedOrders = await getAllOrders();
+        setOrders(fetchedOrders);
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+      }
+    };
+
     fetchOrders();
   }, []);
-
-  const fetchOrders = async () => {
-    try {
-      const fetchedOrders = await getAllOrders();
-      setOrders(fetchedOrders);
-    } catch (error) {
-      console.error('Error fetching orders:', error);
-    }
-  };
 
   return (
     <div>

@@ -5,17 +5,17 @@ function ProductsPage() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const fetchedProducts = await getAllProducts();
+        setProducts(fetchedProducts);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+
     fetchProducts();
   }, []);
-
-  const fetchProducts = async () => {
-    try {
-      const fetchedProducts = await getAllProducts();
-      setProducts(fetchedProducts);
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    }
-  };
 
   return (
     <div>

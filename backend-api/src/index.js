@@ -1,13 +1,11 @@
 const express = require('express');
-const cors = require('cors');
 const { ApolloServer, gql } = require('apollo-server-express');
 const { PrismaClient } = require('@prisma/client');
+const cors = require('cors');
 
 const prisma = new PrismaClient();
-const app = express();
-const PORT = process.env.PORT || 4000;
 
-app.use(cors());
+const app = express();
 
 const typeDefs = gql`
   type Query {
@@ -173,12 +171,16 @@ async function startServer() {
 
   server.applyMiddleware({ app });
 
+  const PORT = process.env.PORT || 4000;
+
+  app.use(cors());
+
   app.get('/', (req, res) => {
     res.send('Server is running. Visit /graphql to access the GraphQL API.');
   });
 
   app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server running at http://localhost:${PORT}${server.graphqlPath}`);
   });
 }
 

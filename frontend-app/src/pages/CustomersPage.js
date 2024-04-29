@@ -7,29 +7,45 @@ const CustomersPage = () => {
 
   useEffect(() => {
     const fetchCustomers = async () => {
-      const data = await getAllCustomers();
-      setCustomers(data);
+      try {
+        const data = await getAllCustomers();
+        setCustomers(data);
+      } catch (error) {
+        console.error('Error fetching customers:', error);
+      }
     };
     fetchCustomers();
   }, []);
 
   const handleCreateCustomer = async () => {
-    await createCustomer(newCustomerData.name, newCustomerData.email, newCustomerData.description);
-    const updatedCustomers = await getAllCustomers();
-    setCustomers(updatedCustomers);
-    setNewCustomerData({ name: '', email: '', description: '' });
+    try {
+      await createCustomer(newCustomerData.name, newCustomerData.email, newCustomerData.description);
+      const updatedCustomers = await getAllCustomers();
+      setCustomers(updatedCustomers);
+      setNewCustomerData({ name: '', email: '', description: '' });
+    } catch (error) {
+      console.error('Error creating customer:', error);
+    }
   };
 
   const handleUpdateCustomer = async (id, newName, newEmail, newDescription) => {
-    await updateCustomer(id, newName, newEmail, newDescription);
-    const updatedCustomers = await getAllCustomers();
-    setCustomers(updatedCustomers);
+    try {
+      await updateCustomer(id, newName, newEmail, newDescription);
+      const updatedCustomers = await getAllCustomers();
+      setCustomers(updatedCustomers);
+    } catch (error) {
+      console.error('Error updating customer:', error);
+    }
   };
 
   const handleDeleteCustomer = async (customerId) => {
-    await deleteCustomer(customerId);
-    const updatedCustomers = await getAllCustomers();
-    setCustomers(updatedCustomers);
+    try {
+      await deleteCustomer(customerId);
+      const updatedCustomers = await getAllCustomers();
+      setCustomers(updatedCustomers);
+    } catch (error) {
+      console.error('Error deleting customer:', error);
+    }
   };
 
   return (
