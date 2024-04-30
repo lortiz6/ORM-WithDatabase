@@ -1,18 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const OrderList = ({ orders }) => {
+const OrderForm = ({ onSubmit }) => {
+  const [totalPrice, setTotalPrice] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(totalPrice);
+    setTotalPrice('');
+  };
+
   return (
-    <div>
-      <h2>Orders</h2>
-      <ul>
-        {orders.map(order => (
-          <li key={order.id}>
-            {order.totalPrice}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <h2>Create New Order</h2>
+      <div>
+        <label htmlFor="orderTotalPrice">Total Price:</label>
+        <input
+          type="text"
+          id="orderTotalPrice"
+          value={totalPrice}
+          onChange={(e) => setTotalPrice(e.target.value)}
+          required
+        />
+      </div>
+      <button type="submit">Create Order</button>
+    </form>
   );
-}
+};
 
-export default OrderList;
+export default OrderForm;
