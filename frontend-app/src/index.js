@@ -1,6 +1,5 @@
-
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react'; // Import React
+import { createRoot } from 'react-dom/client';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
@@ -10,13 +9,13 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root'));
+root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <Router>
         <App />
       </Router>
     </ApolloProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );
