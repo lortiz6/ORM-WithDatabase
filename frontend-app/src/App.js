@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HomePage from './pages/home';
+import HomePage from './pages/home'; // Import HomePage and other components
 import CustomersPage from './pages/CustomersPage';
 import OrdersPage from './pages/OrdersPage';
 import ProductsPage from './pages/ProductsPage';
-import SearchBar from './components/SearchBar';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import SearchBar from './components/SearchBar'; // Import SearchBar component
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'; // Import ApolloClient and other necessary components
 import './css/style.css';
+
+const client = new ApolloClient({
+  uri: 'http://localhost:4000/graphql', // Your GraphQL server endpoint
+  cache: new InMemoryCache(),
+});
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -43,10 +48,5 @@ function App() {
     </ApolloProvider>
   );
 }
-
-const client = new ApolloClient({
-  uri: 'http://localhost:4000/graphql',
-  cache: new InMemoryCache(),
-});
 
 export default App;
