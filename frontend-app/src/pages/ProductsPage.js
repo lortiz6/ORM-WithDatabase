@@ -1,35 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { getAllProducts } from '../services/api';
+import React from 'react';
+import { useQuery, gql } from '@apollo/client';
+
+const GET_PRODUCTS = gql`
+  query GetProducts {
+    products {
+      id
+      name
+      price
+    }
+  }
+`;
 
 const ProductsPage = () => {
-  const [products, setProducts] = useState([]);
+  const { loading, error, data } = useQuery(GET_PRODUCTS);
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data = await getAllProducts();
-        setProducts(data);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      }
-    };
-    fetchProducts();
-  }, []);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error fetching products: {error.message}</p>;
 
   return (
     <div>
       <h1>Products</h1>
-      <div>
-        {products.map((product) => (
-          <div key={product.id}>
-            <h3>{product.name}</h3>
-            <p>Price: ${product.price}</p>
-            {}
-          </div>
+      <ul>
+        {data.products.map(product => (
+          <li key={product.id}>
+            {product.name} - ${product.price}
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
-}
+};
 
 export default ProductsPage;
