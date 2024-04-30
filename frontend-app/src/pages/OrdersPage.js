@@ -1,35 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import { getAllOrders } from '../services/api';
+import React from 'react';
+import { useQuery, gql } from '@apollo/client';
+
+const GET_ORDERS = gql`
+  query GetOrders {
+    orders {
+      id
+      totalPrice
+      createdAt
+      updatedAt
+    }
+  }
+`;
 
 const OrdersPage = () => {
-  const [orders, setOrders] = useState([]);
+  const { loading, error, data } = useQuery(GET_ORDERS);
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const data = await getAllOrders();
-        setOrders(data);
-      } catch (error) {
-        console.error('Error fetching orders:', error);
-      }
-    };
-    fetchOrders();
-  }, []);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
   return (
     <div>
-      <h1>Orders</h1>
-      <div>
-        {orders.map((order) => (
-          <div key={order.id}>
-            <h3>Order ID: {order.id}</h3>
-            <p>Total Price: ${order.totalPrice}</p>
-            {}
-          </div>
+      <h2>Orders</h2>
+      <ul>
+        {data.orders.map((order) => (
+          <li key={order.id}>
+            Order ID: {order.id}, Total Price: {order.totalPrice}
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
-}
+};
 
 export default OrdersPage;

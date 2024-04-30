@@ -1,37 +1,37 @@
-import React, { useEffect, useState } from 'react';
-import { getAllCustomers } from '../services/api';
+import React from 'react';
+import { useQuery, gql } from '@apollo/client';
 
-const CustomerPage = () => {
-  const [customers, setCustomers] = useState([]);
-
-  useEffect(() => {
-    async function fetchCustomers() {
-      try {
-        const customersData = await getAllCustomers();
-        setCustomers(customersData);
-      } catch (error) {
-        console.error('Error fetching customers:', error);
-      }
+const GET_CUSTOMERS = gql`
+  query GetCustomers {
+    customers {
+      id
+      name
+      email
+      description
+      createdAt
+      updatedAt
     }
-    fetchCustomers();
-  }, []);
+  }
+`;
+
+const CustomersPage = () => {
+  const { loading, error, data } = useQuery(GET_CUSTOMERS);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
   return (
     <div>
-      <h1>Customer Page</h1>
-      <div>
-        {}
-        {customers.map(customer => (
-          <div key={customer.id}>
-            <h2>{customer.name}</h2>
-            <p>Email: {customer.email}</p>
-            <p>Description: {customer.description}</p>
-            {}
-          </div>
+      <h2>Customers</h2>
+      <ul>
+        {data.customers.map((customer) => (
+          <li key={customer.id}>
+            <strong>{customer.name}</strong> - {customer.email}
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
-}
+};
 
-export default CustomerPage;
+export default CustomersPage;

@@ -16,7 +16,7 @@ function App() {
   };
 
   return (
-    <ApolloProvider client={client}> {}
+    <ApolloProvider client={client}>
       <Router>
         <div className="app-container">
           <header className="topbar">
@@ -27,7 +27,7 @@ function App() {
                 <li><a href="/orders">Orders</a></li>
                 <li><a href="/products">Products</a></li>
               </ul>
-              <SearchBar handleSearch={handleSearch} /> {}
+              <SearchBar handleSearch={handleSearch} />
             </nav>
           </header>
           <div className="content">
