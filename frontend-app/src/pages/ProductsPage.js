@@ -1,30 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import { getAllProducts } from '../services/api';
 
-function ProductsPage() {
+const ProductsPage = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const fetchedProducts = await getAllProducts();
-        setProducts(fetchedProducts);
+        const data = await getAllProducts();
+        setProducts(data);
       } catch (error) {
         console.error('Error fetching products:', error);
       }
     };
-
     fetchProducts();
   }, []);
 
   return (
     <div>
-      <h1>Products Page</h1>
-      <ul>
-        {products.map(product => (
-          <li key={product.id}>{product.name}</li>
+      <h1>Products</h1>
+      <div>
+        {products.map((product) => (
+          <div key={product.id}>
+            <h3>{product.name}</h3>
+            <p>Price: ${product.price}</p>
+            {}
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
